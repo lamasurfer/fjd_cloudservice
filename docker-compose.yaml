@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  db:
+    container_name: storage_db
+    image: mysql
+    environment:
+      MYSQL_DATABASE: storage_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+  spring:
+    container_name: cloudservice_app
+    image: fjd_cloudservice
+    build: .
+    environment:
+      DATASOURCE_URL: jdbc:mysql://db:3306/storage_db
+      DATASOURCE_USER: user
+      DATASOURCE_PASSWORD: user
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
