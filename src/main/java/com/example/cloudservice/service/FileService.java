@@ -36,6 +36,9 @@ public class FileService {
 
     @Transactional
     public ResponseEntity<Object> uploadFile(String filename, MultipartFile file, String username) {
+        if (fileRepository.existsByFilenameAndUserUsername(filename, username)) {
+            throw new FileException(messages.getMessage("file.upload.file.exists"));
+        }
         try {
             User user = userRepository.getOne(username);
             FileEntity fileEntity = createFileEntity(filename, user, file);
