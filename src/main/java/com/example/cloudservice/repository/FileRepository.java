@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface FileRepository extends JpaRepository<FileEntity, String> {
+public interface FileRepository extends JpaRepository<FileEntity, Long> {
 
     Optional<FileEntity> findFileByFilenameAndUserUsername(String filename, String username);
 

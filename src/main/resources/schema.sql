@@ -26,7 +26,8 @@ CREATE TABLE users_authorities
 
 create table files
 (
-    filename  VARCHAR(255) NOT NULL PRIMARY KEY,
+    id        BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    filename  VARCHAR(255) NOT NULL,
     data      LONGBLOB     NOT NULL,
     file_type VARCHAR(255) NOT NULL,
     size      BIGINT       NOT NULL,

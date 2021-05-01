@@ -1,11 +1,14 @@
 package com.example.cloudservice.model;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Entity(name = "files")
 public class FileEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String filename;
     private String fileType;
     private long size;
@@ -28,6 +31,15 @@ public class FileEntity {
         this.size = size;
         this.data = data;
         this.user = user;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public FileEntity setId(long id) {
+        this.id = id;
+        return this;
     }
 
     public String getFilename() {
@@ -80,17 +92,24 @@ public class FileEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FileEntity that = (FileEntity) o;
-        return Objects.equals(filename, that.filename);
+        return id == that.id
+                && size == that.size
+                && Objects.equals(filename, that.filename)
+                && Objects.equals(fileType, that.fileType)
+                && Arrays.equals(data, that.data);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(filename);
+        int result = Objects.hash(id, filename, fileType, size);
+        result = 31 * result + Arrays.hashCode(data);
+        return result;
     }
 
     @Override
     public String toString() {
         return "FileEntity{" +
+                ", id='" + id + '\'' +
                 ", filename='" + filename + '\'' +
                 ", fileType='" + fileType + '\'' +
                 ", size=" + size +
