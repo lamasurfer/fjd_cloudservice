@@ -1,5 +1,7 @@
 package com.example.cloudservice.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,8 @@ import java.security.spec.X509EncodedKeySpec;
 @Component
 public class KeyProvider {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(KeyProvider.class);
+
     @Value("${app.security.key-provider.signature-algorithm}")
     private String algorithm;
     @Value("${app.security.key-provider.key-size}")
@@ -25,25 +29,27 @@ public class KeyProvider {
     private String privateKeyFileName;
 
     public KeyPair provideKeys() {
-        KeyPair kpg;
+        KeyPair keyPair;
         if (checkIfKeyFilesExist()) {
-            kpg = loadKeyPair();
+            keyPair = loadKeyPair();
         } else {
-            kpg = generateKeyPair();
-            saveKeyPair(kpg);
+            keyPair = generateKeyPair();
+            saveKeyPair(keyPair);
         }
-        return kpg;
+        return keyPair;
     }
 
     KeyPair generateKeyPair() {
         try {
             KeyPairGenerator kpg = KeyPairGenerator.getInstance(algorithm);
             kpg.initialize(keySize);
-            return kpg.generateKeyPair();
+            KeyPair keyPair = kpg.generateKeyPair();
+            LOGGER.info("KeyPair generated successfully.");
+            return keyPair;
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to generate KeyPair : " + e.getClass().getSimpleName() + ".");
         }
-        throw new IllegalStateException();
+        throw new IllegalStateException("KeyPair generation failed!");
     }
 
     void saveKeyPair(KeyPair keyPair) {
@@ -58,8 +64,9 @@ public class KeyProvider {
              FileOutputStream privateFos = new FileOutputStream(privateKeyFileName)) {
             publicFos.write(x509EncodedKeySpec.getEncoded());
             privateFos.write(pkcs8EncodedKeySpec.getEncoded());
+            LOGGER.info("Keys saved successfully.");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to save keys : " + e.getClass().getSimpleName() + ".");
         }
     }
 
@@ -82,10 +89,12 @@ public class KeyProvider {
 
             PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
             PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
-
-            return new KeyPair(publicKey, privateKey);
+            KeyPair keyPair = new KeyPair(publicKey, privateKey);
+            LOGGER.info("KeysPair loaded successfully.");
+            return keyPair;
 
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+            LOGGER.error("Failed to load KeyPair : " + e.getClass().getSimpleName() + ", new KeyPair will be generated.");
             KeyPair keyPair = generateKeyPair();
             saveKeyPair(keyPair);
             return keyPair;
