@@ -1,7 +1,7 @@
 package com.example.cloudservice.security;
 
 import com.example.cloudservice.repository.UserRepository;
-import com.example.cloudservice.service.TokenCache;
+import com.example.cloudservice.service.LoggedOutTokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRepository userRepository;
     private final MessageSourceAccessor messages;
     private final KeyProvider keyProvider;
-    private final TokenCache tokenCache;
+    private final LoggedOutTokenService loggedOutTokenService;
 
     @Value("${app.security.cors.allowed-origins}")
     private List<String> allowedOrigins;
@@ -60,11 +60,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(UserRepository userRepository,
                           MessageSourceAccessor messages,
                           KeyProvider keyProvider,
-                          TokenCache tokenCache) {
+                          LoggedOutTokenService loggedOutTokenService) {
         this.userRepository = userRepository;
         this.messages = messages;
         this.keyProvider = keyProvider;
-        this.tokenCache = tokenCache;
+        this.loggedOutTokenService = loggedOutTokenService;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .authenticated()
                 )
                 .logout()
-                .addLogoutHandler(new TokenLogoutHandler(tokenCache))
+                .addLogoutHandler(new TokenLogoutHandler(loggedOutTokenService))
                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
                 .and()
                 .oauth2ResourceServer()
