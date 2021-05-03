@@ -15,8 +15,12 @@ class KeyProviderTest {
 
     private final String publicKey = "test_public.key";
     private final String privateKey = "test_private.key";
+    private final String algorithm = "RSA";
+    private final int keySize = 2048;
 
     private final KeyProvider keyProvider = new KeyProvider()
+            .setAlgorithm(algorithm)
+            .setKeySize(keySize)
             .setPrivateKeyFileName(privateKey)
             .setPublicKeyFileName(publicKey);
 

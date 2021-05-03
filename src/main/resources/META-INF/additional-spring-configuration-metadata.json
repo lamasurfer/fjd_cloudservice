@@ -1,0 +1,68 @@
+{
+  "properties": [
+    {
+      "name": "app.security.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "List of allowed origins."
+    },
+    {
+      "name": "app.security.cors.allowed-methods",
+      "type": "java.lang.String",
+      "description": "List of allowed Http methods."
+    },
+    {
+      "name": "app.security.cors.allowed-headers",
+      "type": "java.lang.String",
+      "description": "List of allowed Http headers."
+    },
+    {
+      "name": "app.security.cors.allow-credentials",
+      "type": "java.lang.String",
+      "description": "Allow credentials (true/false)."
+    },
+    {
+      "name": "app.security.jwt.token-expiration-time-millis",
+      "type": "java.lang.String",
+      "description": "Jwt expiration time in milliseconds."
+    },
+    {
+      "name": "app.security.jwt.invalid-token-store-time-millis",
+      "type": "java.lang.String",
+      "description": "Logged out token DB storage time in millis, should be > jwt expiration time."
+    },
+    {
+      "name": "app.security.jwt.cache-reset-rate-millis",
+      "type": "java.lang.String",
+      "description": "Rate of logged out tokens cache reset and removing from DB."
+    },
+    {
+      "name": "app.security.jwt.signature-algorithm",
+      "type": "java.lang.String",
+      "description": "Jwt tools signature algorithm (RSA256, RSA 512)."
+    },
+    {
+      "name": "app.security.key-provider.signature-algorithm",
+      "type": "java.lang.String",
+      "description": "KeyProvider KeyGenerator signature algorithm (RSA)."
+    },
+    {
+      "name": "app.security.key-provider.key-size",
+      "type": "java.lang.String",
+      "description": "KeyProvider KeyGenerator key size (2048)."
+    },
+    {
+      "name": "app.security.key-provider.public-key-file-name",
+      "type": "java.lang.String",
+      "description": "KeyProvider public key filename."
+    },
+    {
+      "name": "app.security.key-provider.private-key-file-name",
+      "type": "java.lang.String",
+      "description": "KeyProvider private key key filename."
+    },
+    {
+      "name": "app.security.jwt.issuer",
+      "type": "java.lang.String",
+      "description": "Jwt issuer."
+    }
+  ] }

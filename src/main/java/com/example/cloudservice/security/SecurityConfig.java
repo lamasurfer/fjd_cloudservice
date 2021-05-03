@@ -1,8 +1,8 @@
 package com.example.cloudservice.security;
 
-import com.example.cloudservice.config.AppConstants;
 import com.example.cloudservice.repository.UserRepository;
 import com.example.cloudservice.service.TokenCache;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -37,10 +37,25 @@ import java.util.List;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    public static final String AUTH_TOKEN = "auth-token";
+
     private final UserRepository userRepository;
     private final MessageSourceAccessor messages;
     private final KeyProvider keyProvider;
     private final TokenCache tokenCache;
+
+    @Value("${app.security.cors.allowed-origins}")
+    private List<String> allowedOrigins;
+    @Value("${app.security.cors.allowed-methods}")
+    private List<String> allowedMethods;
+    @Value("${app.security.cors.allowed-headers}")
+    private List<String> allowedHeaders;
+    @Value("${app.security.cors.allow-credentials}")
+    private boolean allowCredentials;
+    @Value("${app.security.jwt.signature-algorithm}")
+    private String algorithm;
+    @Value("${app.security.jwt.issuer}")
+    private String issuer;
 
     public SecurityConfig(UserRepository userRepository,
                           MessageSourceAccessor messages,
@@ -86,10 +101,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "auth-token"));
+        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedMethods(allowedMethods);
+        configuration.setAllowedHeaders(allowedHeaders);
+        configuration.setAllowCredentials(allowCredentials);
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -115,11 +130,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     JwtDecoder jwtDecoder(KeyPair keyPair, LoggedOutTokenValidator loggedOutTokenValidator) {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder
                 .withPublicKey((RSAPublicKey) keyPair.getPublic())
-                .signatureAlgorithm(SignatureAlgorithm.RS512)
+                .signatureAlgorithm(SignatureAlgorithm.from(algorithm))
                 .build();
 
         OAuth2TokenValidator<Jwt> customValidator = new DelegatingOAuth2TokenValidator<>(
-                JwtValidators.createDefaultWithIssuer(AppConstants.ISSUER),
+                JwtValidators.createDefaultWithIssuer(issuer),
                 loggedOutTokenValidator);
 
         jwtDecoder.setJwtValidator(customValidator);
@@ -129,7 +144,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     BearerTokenResolver bearerTokenResolver() {
         DefaultBearerTokenResolver bearerTokenResolver = new DefaultBearerTokenResolver();
-        bearerTokenResolver.setBearerTokenHeaderName(AppConstants.TOKEN_HEADER);
+        bearerTokenResolver.setBearerTokenHeaderName(AUTH_TOKEN);
         return bearerTokenResolver;
     }
 }

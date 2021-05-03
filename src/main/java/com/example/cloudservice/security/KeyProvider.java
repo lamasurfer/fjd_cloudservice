@@ -1,5 +1,6 @@
 package com.example.cloudservice.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -14,10 +15,14 @@ import java.security.spec.X509EncodedKeySpec;
 @Component
 public class KeyProvider {
 
-    private String algorithm = "RSA";
-    private int keySize = 2048;
-    private String publicKeyFileName = "public.key";
-    private String privateKeyFileName = "private.key";
+    @Value("${app.security.key-provider.signature-algorithm}")
+    private String algorithm;
+    @Value("${app.security.key-provider.key-size}")
+    private int keySize;
+    @Value("${app.security.key-provider.public-key-file-name}")
+    private String publicKeyFileName;
+    @Value("${app.security.key-provider.private-key-file-name}")
+    private String privateKeyFileName;
 
     public KeyPair provideKeys() {
         KeyPair kpg;

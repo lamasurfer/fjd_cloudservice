@@ -1,12 +1,12 @@
 package com.example.cloudservice.transfer.login;
 
-import com.example.cloudservice.config.AppConstants;
+import com.example.cloudservice.security.SecurityConfig;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
 public class LoginResponse {
-    @JsonProperty(AppConstants.TOKEN_HEADER)
+    @JsonProperty(SecurityConfig.AUTH_TOKEN)
     private String token;
 
     public LoginResponse() {

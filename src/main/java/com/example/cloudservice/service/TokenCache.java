@@ -1,12 +1,13 @@
 package com.example.cloudservice.service;
 
-import com.example.cloudservice.config.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,24 +17,29 @@ public class TokenCache {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenCache.class);
     private final Map<String, Long> tokenCache = new ConcurrentHashMap<>(100);
 
-    // TODO поменять время действия
+    @Value("${app.security.jwt.invalid-token-store-time-millis}")
+    private long tokenStoreTime;
+
     public void addToken(String token) {
-        tokenCache.put(token, Instant.now().getEpochSecond() + 600 + 60); // 11 минут, на 1 мин больше жизни токена
+        tokenCache.put(token, Date.from(Instant.now().plusMillis(tokenStoreTime)).getTime());
+        System.out.println(tokenCache);
     }
 
     public boolean checkToken(String token) {
         return tokenCache.containsKey(token);
     }
 
-    // пока каждые 5 минут
-    @Scheduled(fixedRate = AppConstants.DELETE_TOKENS_RATE)
+    @Scheduled(fixedRateString = "${app.security.jwt.cache-reset-rate-millis}")
     public void deleteOldTokens() {
-        Long now = Instant.now().getEpochSecond();
+        System.out.println(tokenCache);
+        Long now = Date.from(Instant.now()).getTime();
+        System.out.println(now);
         boolean removed = tokenCache.entrySet().removeIf(entry -> entry.getValue().compareTo(now) < 0);
         String message = "Logged out tokens check performed";
         if (removed) {
             message = message + ", old tokens removed";
         }
         LOGGER.info(message);
+        System.out.println(tokenCache);
     }
 }
