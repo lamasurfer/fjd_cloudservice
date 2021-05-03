@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS logged_out_tokens;
 DROP TABLE IF EXISTS users_authorities;
 DROP TABLE IF EXISTS authorities;
 DROP TABLE IF EXISTS files;
@@ -33,4 +34,10 @@ create table files
     size      BIGINT       NOT NULL,
     username  varchar(255) NOT NULL,
     CONSTRAINT fk_username_file FOREIGN KEY (username) REFERENCES users (username)
+);
+
+create table logged_out_tokens
+(
+    token      VARCHAR(750) NOT NULL PRIMARY KEY,
+    store_till TIMESTAMP DEFAULT NOW()
 );
