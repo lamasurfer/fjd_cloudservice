@@ -27,4 +27,8 @@ public class LoggedOutTokenValidator implements OAuth2TokenValidator<Jwt> {
         }
         return OAuth2TokenValidatorResult.success();
     }
+
+    public OAuth2Error getError() {
+        return error;
+    }
 }
