@@ -26,7 +26,7 @@ public class TokenProvider {
     private final JWSSigner signer;
 
     @Value("${app.security.jwt.token-expiration-time-millis}")
-    private long tokenExpirationTime;
+    private long expirationTimeInMillis;
     @Value("${app.security.jwt.signature-algorithm}")
     private String algorithm;
     @Value("${app.security.jwt.issuer}")
@@ -37,17 +37,36 @@ public class TokenProvider {
     }
 
     public String createToken(User user) throws JOSEException {
+        return createToken(user,
+                issuer,
+                SCOPE_CLAIM_NAME,
+                Instant.now(),
+                expirationTimeInMillis,
+                algorithm,
+                UUID.randomUUID().toString(),
+                signer);
+    }
+
+    public String createToken(User user,
+                              String issuer,
+                              String scopeClaimName,
+                              Instant now,
+                              long expirationTimeInMillis,
+                              String algorithm,
+                              String id,
+                              JWSSigner signer) throws JOSEException {
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer(issuer)
-                .claim(SCOPE_CLAIM_NAME, user.getAuthorities()
+                .issueTime(Date.from(now))
+                .claim(scopeClaimName, user.getAuthorities()
                         .stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.joining(",")))
-                .expirationTime(Date.from(Instant.now().plusMillis(tokenExpirationTime)))
+                .expirationTime(Date.from(now.plusMillis(expirationTimeInMillis)))
                 .build();
 
-        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.parse(algorithm)).keyID(UUID.randomUUID().toString()).build();
+        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.parse(algorithm)).keyID(id).build();
 
         SignedJWT signedJWT = new SignedJWT(header, claimsSet);
         signedJWT.sign(signer);
