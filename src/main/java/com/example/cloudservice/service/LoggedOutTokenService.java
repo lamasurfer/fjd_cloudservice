@@ -23,12 +23,12 @@ public class LoggedOutTokenService {
 
     private final LoggedOutTokenRepository tokenRepository;
 
+    @Value("${app.security.jwt.invalid-token-store-time-millis}")
+    private long tokenStoreTime;
+
     public LoggedOutTokenService(LoggedOutTokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
-
-    @Value("${app.security.jwt.invalid-token-store-time-millis}")
-    private long tokenStoreTime;
 
     @Transactional
     @CacheEvict(CACHE_NAME)
