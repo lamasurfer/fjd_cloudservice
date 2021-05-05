@@ -1,5 +1,6 @@
 package com.example.cloudservice.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Objects;
 @Entity(name = "logged_out_tokens")
 public class LoggedOutToken {
     @Id
+    @Column(length = 750)
     private String token;
     private Date storeTill;
 
