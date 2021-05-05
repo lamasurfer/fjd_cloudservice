@@ -126,7 +126,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     // validation annotations
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(ConstraintViolationException e) {
+    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         final String message = e.getConstraintViolations()
                 .stream()
@@ -135,12 +135,12 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.joining(", "));
         final ErrorMessage errorMessage = new ErrorMessage(message, status.value());
         LOGGER.warn(e.getClass().getSimpleName() + " : " + errorMessage.getMessage());
-        return ResponseEntity.status(status).body(message);
+        return ResponseEntity.status(status).body(errorMessage);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorMessage> handleBadCredentials(BadCredentialsException e) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         final ErrorMessage errorMessage = new ErrorMessage(messages.getMessage("bad.credentials"), status.value());
         LOGGER.warn(e.getClass().getSimpleName() + " : " + errorMessage.getMessage());
         return ResponseEntity.status(status).body(errorMessage);
