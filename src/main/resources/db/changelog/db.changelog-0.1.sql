@@ -1,14 +1,11 @@
-DROP TABLE IF EXISTS logged_out_tokens;
-DROP TABLE IF EXISTS users_authorities;
-DROP TABLE IF EXISTS authorities;
-DROP TABLE IF EXISTS files;
-DROP TABLE IF EXISTS users;
-
+--liquibase formatted sql
+--changeset user:0.1-1
 CREATE TABLE authorities
 (
     authority VARCHAR(255) NOT NULL PRIMARY KEY
 );
 
+--changeset user:0.1-2
 CREATE TABLE users
 (
     username VARCHAR(255) NOT NULL PRIMARY KEY,
@@ -16,6 +13,7 @@ CREATE TABLE users
     password VARCHAR(255) NOT NULL
 );
 
+--changeset user:0.1-3
 CREATE TABLE users_authorities
 (
     username  VARCHAR(255) NOT NULL,
@@ -25,6 +23,7 @@ CREATE TABLE users_authorities
     CONSTRAINT fk_username_authority FOREIGN KEY (username) REFERENCES users (username)
 );
 
+--changeset user:0.1-4
 create table files
 (
     id        BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -36,6 +35,7 @@ create table files
     CONSTRAINT fk_username_file FOREIGN KEY (username) REFERENCES users (username)
 );
 
+--changeset user:0.1-5
 create table logged_out_tokens
 (
     token      VARCHAR(750) NOT NULL PRIMARY KEY,
