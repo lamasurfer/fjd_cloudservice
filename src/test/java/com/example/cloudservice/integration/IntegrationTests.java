@@ -45,7 +45,7 @@ public class IntegrationTests {
             .withPassword("user");
 
     @Container
-    private static final GenericContainer<?> CLOUD_SERVICE_APP = new GenericContainer<>("cloudservice:latest")
+    private static final GenericContainer<?> CLOUD_SERVICE_APP = new GenericContainer<>("fjd_cloudservice:latest")
             .withNetwork(network)
             .withExposedPorts(APP_PORT)
             .withEnv(Map.of("DATASOURCE_URL", "jdbc:mysql://db:3306/storage_db"))
@@ -111,7 +111,6 @@ public class IntegrationTests {
 
         final String expected = "server.port=8081\r\n" +
                 "spring.main.banner-mode=off\r\n" +
-                "\r\n" +
                 "app.security.cors.allowed-origins=http://localhost:8080, http://localhost\r\n" +
                 "app.security.cors.allowed-methods=GET, POST, PUT, DELETE\r\n" +
                 "app.security.cors.allowed-headers=Authorization, Content-Type, auth-token\r\n" +
