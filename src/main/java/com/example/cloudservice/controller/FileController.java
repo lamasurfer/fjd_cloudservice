@@ -3,7 +3,6 @@ package com.example.cloudservice.controller;
 import com.example.cloudservice.service.FileService;
 import com.example.cloudservice.transfer.file.RenameRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,7 +56,6 @@ public class FileController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('SCOPE_files')") // проверка jwt
     public ResponseEntity<Object> listFiles(@RequestParam(required = false, defaultValue = "3") int limit,
                                             Principal principal) {
         final String username = principal.getName();

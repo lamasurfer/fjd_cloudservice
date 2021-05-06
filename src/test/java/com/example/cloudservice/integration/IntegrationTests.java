@@ -55,7 +55,7 @@ public class IntegrationTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    void test() {
+    void test_commonScenario_expectedBehaviour() {
         final int mappedPort = CLOUD_SERVICE_APP.getMappedPort(APP_PORT);
         // login
         final LoginRequest loginRequest = new LoginRequest("john", "john");
@@ -88,7 +88,7 @@ public class IntegrationTests {
                         HttpMethod.POST,
                         uploadFileEntity,
                         Object.class);
-        assertEquals(HttpStatus.SC_OK,  uploadFileResponse.getStatusCodeValue());
+        assertEquals(HttpStatus.SC_OK, uploadFileResponse.getStatusCodeValue());
 
         // download file
         final HttpHeaders downloadFileHeaders = new HttpHeaders();

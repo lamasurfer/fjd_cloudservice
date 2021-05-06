@@ -37,7 +37,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         this.messages = messages;
     }
 
-    // http method
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e,
                                                                          HttpHeaders headers,
@@ -49,7 +48,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).headers(headers).body(errorMessage);
     }
 
-    // json parsing
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
                                                                   HttpHeaders headers,
@@ -61,7 +59,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).headers(headers).body(errorMessage);
     }
 
-    // request param
     @Override
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException e,
                                                                HttpHeaders headers,
@@ -73,7 +70,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).headers(headers).body(errorMessage);
     }
 
-    // request param
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException e,
                                                                           HttpHeaders headers,
@@ -85,7 +81,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).headers(headers).body(errorMessage);
     }
 
-    // /list?limit=asdf
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException e,
                                                         HttpHeaders headers,
@@ -97,7 +92,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).headers(headers).body(errorMessage);
     }
 
-    // multipart
     @ExceptionHandler(MultipartException.class)
     public ResponseEntity<ErrorMessage> handleMultipart(MultipartException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -107,7 +101,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(errorMessage);
     }
 
-    // validation annotations
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
                                                                   HttpHeaders headers,
@@ -124,7 +117,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).headers(headers).body(errorMessage);
     }
 
-    // validation annotations
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;

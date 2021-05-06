@@ -65,4 +65,5 @@
       "type": "java.lang.String",
       "description": "Jwt issuer."
     }
-  ] }
+  ]
+}

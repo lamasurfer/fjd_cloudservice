@@ -44,7 +44,7 @@ class FileRepositoryTest {
     }
 
     @Test
-    void findFileByFilenameAndUserUsername() {
+    void test_findFileByFilenameAndUserUsername() {
         fileRepository.saveAndFlush(user1_file1);
         fileRepository.saveAndFlush(user2_file1);
 
@@ -63,7 +63,7 @@ class FileRepositoryTest {
     }
 
     @Test
-    void existsByFilenameAndUserUsername() {
+    void test_existsByFilenameAndUserUsername() {
         fileRepository.saveAndFlush(user1_file1);
         fileRepository.saveAndFlush(user2_file1);
 
@@ -74,7 +74,7 @@ class FileRepositoryTest {
 
     @Test
     @Transactional
-    void removeByFilenameAndUserUsername() {
+    void test_removeByFilenameAndUserUsername() {
         fileRepository.saveAndFlush(user1_file1);
         fileRepository.saveAndFlush(user2_file1);
 
@@ -87,7 +87,7 @@ class FileRepositoryTest {
 
     @Test
     @Transactional
-    void renameFile() {
+    void test_renameFile() {
         final String newFileName = "newFileName";
 
         fileRepository.saveAndFlush(user1_file1);
@@ -98,7 +98,7 @@ class FileRepositoryTest {
     }
 
     @Test
-    void findFileByUserUsername() {
+    void test_findFileByUserUsername() {
         fileRepository.saveAndFlush(user1_file1);
         fileRepository.saveAndFlush(user2_file1);
 

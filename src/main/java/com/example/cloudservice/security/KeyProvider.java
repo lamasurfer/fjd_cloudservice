@@ -90,7 +90,7 @@ public class KeyProvider {
             PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
             PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
             KeyPair keyPair = new KeyPair(publicKey, privateKey);
-            LOGGER.info("KeysPair loaded successfully.");
+            LOGGER.info("KeyPair loaded successfully.");
             return keyPair;
 
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {

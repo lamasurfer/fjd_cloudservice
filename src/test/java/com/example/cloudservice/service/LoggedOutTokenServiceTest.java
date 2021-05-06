@@ -38,7 +38,7 @@ class LoggedOutTokenServiceTest {
     }
 
     @Test
-    void createLoggedOutToken_expectedBehaviour() {
+    void test_createLoggedOutToken_expectedBehaviour() {
         final String token = "test token";
         final Instant instant = Instant.now();
         final Date expectedStoreTill = Date.from(instant.plusMillis(storeTime));
@@ -50,14 +50,14 @@ class LoggedOutTokenServiceTest {
     }
 
     @Test
-    void addToken_savesNewLoggedOutTokenToDB() {
+    void test_addToken_savesNewLoggedOutTokenToDB() {
         final String token = "test token";
         tokenService.addToken(token);
         assertTrue(tokenRepository.existsById(token));
     }
 
     @Test
-    void checkToken_returnsTrue_ifTokenIsPresent() {
+    void test_checkToken_returnsTrue_ifTokenIsPresent() {
         final String token = "test token";
         final Date storeTill = Date.from(Instant.now().plusMillis(storeTime));
         final LoggedOutToken loggedOutToken = new LoggedOutToken(token, storeTill);
@@ -67,7 +67,7 @@ class LoggedOutTokenServiceTest {
     }
 
     @Test
-    void checkToken_returnsFalse_ifTokenIsNotPresent() {
+    void test_checkToken_returnsFalse_ifTokenIsNotPresent() {
         final String token = "test token";
 
         assertFalse(tokenRepository.existsById(token));
@@ -75,7 +75,7 @@ class LoggedOutTokenServiceTest {
     }
 
     @Test
-    void deleteOldTokens() {
+    void test_deleteOldTokens() {
         final String token = "test token";
         final LoggedOutToken actual = new LoggedOutToken(token, Date.from(Instant.now().minusMillis(1)));
 

@@ -20,7 +20,7 @@ class LoggedOutTokenRepositoryTest {
 
     @Test
     @Transactional
-    void removeAllByStoreTillBefore_expectedBehaviour() {
+    void test_removeAllByStoreTillBefore_expectedBehaviour() {
         final Instant instant = Instant.now();
         final String token1 = "test token1";
         final Date storeTill1 = Date.from(instant.minusMillis(1));

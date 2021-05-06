@@ -41,7 +41,7 @@ class TokenProviderTest {
     private TokenProvider tokenProvider;
 
     @Test
-    void createTokenWithDetails_expectedBehaviour() throws JOSEException {
+    void test_createTokenWithDetails_expectedBehaviour() throws JOSEException {
         final String scopeClaimName = "scp";
         final Instant now = Instant.now();
         final long expirationTimeInMillis = 600000;
@@ -75,7 +75,7 @@ class TokenProviderTest {
     }
 
     @Test
-    void createTokenSimple_expectedBehaviour() throws JOSEException {
+    void test_createTokenSimple_expectedBehaviour() throws JOSEException {
         final String token = tokenProvider.createToken(user);
 
         final OAuth2TokenValidator<Jwt> validator = JwtValidators.createDefaultWithIssuer(issuer);

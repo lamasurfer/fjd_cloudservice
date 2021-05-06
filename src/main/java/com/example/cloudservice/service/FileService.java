@@ -62,7 +62,7 @@ public class FileService {
         final FileEntity fileEntity = fileRepository.findFileByFilenameAndUserUsername(filename, username)
                 .orElseThrow(() -> new FileException(messages.getMessage("file.download.problems")));
 
-        HttpHeaders headers = new HttpHeaders();
+        final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(fileEntity.getFileType()));
         headers.setContentDisposition(ContentDisposition.builder(fileEntity.getFileType())
                 .filename(fileEntity.getFilename()).build());
