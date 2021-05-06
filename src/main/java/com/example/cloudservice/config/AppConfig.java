@@ -24,6 +24,7 @@ public class AppConfig implements WebMvcConfigurer {
         messageSource.addBasenames("messages/ValidationMessages");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setDefaultLocale(new Locale("ru", "RU"));
+        messageSource.setFallbackToSystemLocale(false);
         return messageSource;
     }
 
