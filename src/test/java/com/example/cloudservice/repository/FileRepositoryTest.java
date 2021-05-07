@@ -4,7 +4,6 @@ import com.example.cloudservice.model.FileEntity;
 import com.example.cloudservice.model.User;
 import com.example.cloudservice.transfer.file.FileProjection;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,28 +17,18 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class FileRepositoryTest {
 
-    private final User user1 = new User().setUsername("user1").setPassword("password1");
-    private final User user2 = new User().setUsername("user2").setPassword("password2");
+    private final User user1 = new User().setUsername("user1");
+    private final User user2 = new User().setUsername("user2");
 
     private final FileEntity user1_file1 = new FileEntity("test1", "testType", 1, new byte[0], user1);
     private final FileEntity user1_file2 = new FileEntity("test2", "testType", 1, new byte[0], user1);
     private final FileEntity user2_file1 = new FileEntity("test3", "testType", 1, new byte[0], user2);
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private FileRepository fileRepository;
-
-    @BeforeEach
-    void init() {
-        userRepository.save(user1);
-        userRepository.save(user2);
-    }
 
     @AfterEach
     void clear() {
-        userRepository.deleteAll();
         fileRepository.deleteAll();
     }
 

@@ -123,7 +123,8 @@ public class IntegrationTests {
                 "app.security.key-provider.signature-algorithm=RSA\r\n" +
                 "app.security.key-provider.key-size=2048\r\n" +
                 "app.security.key-provider.public-key-file-name=public.key\r\n" +
-                "app.security.key-provider.private-key-file-name=private.key";
+                "app.security.key-provider.private-key-file-name=private.key\r\n" +
+                "spring.liquibase.change-log=db/changelog/db.changelog-test.yaml";
 
         assertEquals(expected, new String(loadedData, StandardCharsets.UTF_8));
 
