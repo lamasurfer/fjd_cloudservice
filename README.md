@@ -47,6 +47,4 @@ npm run serve
 docker-compose down
 ```
 
-Ссылка на репозиторий с исходным кодом: https://github.com/lamasurfer/fjd_cloudservice
-
 Ссылка на задание: https://github.com/netology-code/jd-homeworks/blob/master/diploma/cloudservice.md
