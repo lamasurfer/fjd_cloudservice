@@ -1,14 +1,17 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.5'
+    id 'org.springframework.boot' version '2.5.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+}
+
+jar {
+    enabled = false
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 def testContainersVersion = '1.15.2'
-def liquibaseVersion = '4.3.5'
 
 repositories {
     mavenCentral()
@@ -34,7 +37,7 @@ dependencies {
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:mysql:$testContainersVersion"
     testImplementation 'com.h2database:h2'
-    implementation "org.liquibase:liquibase-core:$liquibaseVersion"
+    implementation 'org.liquibase:liquibase-core'
 }
 
 
