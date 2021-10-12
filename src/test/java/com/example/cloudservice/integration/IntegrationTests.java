@@ -18,11 +18,10 @@ import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,13 +31,13 @@ public class IntegrationTests {
     private static final String HOST = "http://localhost:";
     private static final String AUTH_TOKEN = "auth-token";
     private static final String BEARER = "Bearer ";
-    private static final String file = "application.properties";
+    private static final String TEST_FILE_NAME = "application.properties";
 
-    private static final Network network = Network.newNetwork();
+    private static final Network NETWORK = Network.newNetwork();
 
     @Container
     private static final MySQLContainer<?> MYSQL_CONTAINER = new MySQLContainer<>("mysql:latest")
-            .withNetwork(network)
+            .withNetwork(NETWORK)
             .withNetworkAliases("db")
             .withDatabaseName("storage_db")
             .withUsername("user")
@@ -46,7 +45,7 @@ public class IntegrationTests {
 
     @Container
     private static final GenericContainer<?> CLOUD_SERVICE_APP = new GenericContainer<>("fjd_cloudservice:latest")
-            .withNetwork(network)
+            .withNetwork(NETWORK)
             .withExposedPorts(APP_PORT)
             .withEnv(Map.of("DATASOURCE_URL", "jdbc:mysql://db:3306/storage_db"))
             .dependsOn(MYSQL_CONTAINER);
@@ -55,7 +54,7 @@ public class IntegrationTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    void test_commonScenario_expectedBehaviour() {
+    void test_commonScenario_expectedBehaviour() throws IOException {
         final int mappedPort = CLOUD_SERVICE_APP.getMappedPort(APP_PORT);
         // login
         final LoginRequest loginRequest = new LoginRequest("john", "john");
@@ -72,9 +71,10 @@ public class IntegrationTests {
         final String token = loginResponse.getToken();
 
         // upload file
+        final ClassPathResource testFile = new ClassPathResource(TEST_FILE_NAME);
         final MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("filename", file);
-        parameters.add("file", new ClassPathResource(file));
+        parameters.add("filename", TEST_FILE_NAME);
+        parameters.add("file", testFile);
 
         final HttpHeaders uploadFileHeaders = new HttpHeaders();
         uploadFileHeaders.set(AUTH_TOKEN, BEARER + token);
@@ -97,7 +97,7 @@ public class IntegrationTests {
         final HttpEntity<MultiValueMap<String, Object>> downloadFileEntity = new HttpEntity<>(downloadFileHeaders);
 
         final ResponseEntity<ByteArrayResource> downloadFileResponse =
-                restTemplate.exchange(HOST + mappedPort + "/file?filename=" + file,
+                restTemplate.exchange(HOST + mappedPort + "/file?filename=" + TEST_FILE_NAME,
                         HttpMethod.GET,
                         downloadFileEntity,
                         ByteArrayResource.class);
@@ -108,25 +108,9 @@ public class IntegrationTests {
         assertNotNull(byteArrayResource);
 
         final byte[] loadedData = byteArrayResource.getByteArray();
+        final byte[] expected = testFile.getInputStream().readAllBytes();
 
-        final String expected = "server.port=8081\r\n" +
-                "spring.main.banner-mode=off\r\n" +
-                "app.security.cors.allowed-origins=http://localhost:8080, http://localhost\r\n" +
-                "app.security.cors.allowed-methods=GET, POST, PUT, DELETE\r\n" +
-                "app.security.cors.allowed-headers=Authorization, Content-Type, auth-token\r\n" +
-                "app.security.cors.allow-credentials=true\r\n" +
-                "app.security.jwt.issuer=example.com\r\n" +
-                "app.security.jwt.token-expiration-time-millis=600000\r\n" +
-                "app.security.jwt.invalid-token-store-time-millis=660000\r\n" +
-                "app.security.jwt.cache-reset-rate-millis=300000\r\n" +
-                "app.security.jwt.signature-algorithm=RS512\r\n" +
-                "app.security.key-provider.signature-algorithm=RSA\r\n" +
-                "app.security.key-provider.key-size=2048\r\n" +
-                "app.security.key-provider.public-key-file-name=public.key\r\n" +
-                "app.security.key-provider.private-key-file-name=private.key\r\n" +
-                "spring.liquibase.change-log=db/changelog/db.changelog-test.yaml";
-
-        assertEquals(expected, new String(loadedData, StandardCharsets.UTF_8));
+        assertArrayEquals(expected, loadedData);
 
         // logout
         final HttpHeaders logoutHeaders = new HttpHeaders();
