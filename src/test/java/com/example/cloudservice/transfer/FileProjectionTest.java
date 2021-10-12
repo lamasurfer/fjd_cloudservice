@@ -22,13 +22,13 @@ class FileProjectionTest {
     @Test
     void test_serialization() throws IOException {
 
-        ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
-        FileProjection projection = factory.createProjection(FileProjection.class);
+        final ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
+        final FileProjection projection = factory.createProjection(FileProjection.class);
         projection.setFilename("test.file");
         projection.setSize(7000);
 
         final JsonContent<FileProjection> result = this.jacksonTester.write(projection);
-        final String expectedJson = "{\"size\":7000,\"filename\":\"test.file\"}";
+        final String expectedJson = "{\"filename\":\"test.file\",\"size\":7000}";
         assertEquals(expectedJson, result.getJson());
     }
 }
