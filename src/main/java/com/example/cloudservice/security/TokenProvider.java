@@ -55,7 +55,7 @@ public class TokenProvider {
                               String algorithm,
                               String id,
                               JWSSigner signer) throws JOSEException {
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+        final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer(issuer)
                 .issueTime(Date.from(now))
@@ -66,9 +66,9 @@ public class TokenProvider {
                 .expirationTime(Date.from(now.plusMillis(expirationTimeInMillis)))
                 .build();
 
-        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.parse(algorithm)).keyID(id).build();
+        final JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.parse(algorithm)).keyID(id).build();
 
-        SignedJWT signedJWT = new SignedJWT(header, claimsSet);
+        final SignedJWT signedJWT = new SignedJWT(header, claimsSet);
         signedJWT.sign(signer);
 
         return signedJWT.serialize();

@@ -70,8 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(username ->
-                userRepository.findById(username)
-                        .orElseThrow(() -> new UsernameNotFoundException(messages.getMessage("user.not.found"))))
+                        userRepository.findById(username)
+                                .orElseThrow(() -> new UsernameNotFoundException(messages.getMessage("user.not.found"))))
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -128,12 +128,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     JwtDecoder jwtDecoder(KeyPair keyPair, LoggedOutTokenValidator loggedOutTokenValidator) {
-        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder
+        final NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder
                 .withPublicKey((RSAPublicKey) keyPair.getPublic())
                 .signatureAlgorithm(SignatureAlgorithm.from(algorithm))
                 .build();
 
-        OAuth2TokenValidator<Jwt> customValidator = new DelegatingOAuth2TokenValidator<>(
+        final OAuth2TokenValidator<Jwt> customValidator = new DelegatingOAuth2TokenValidator<>(
                 JwtValidators.createDefaultWithIssuer(issuer),
                 loggedOutTokenValidator);
 
@@ -143,7 +143,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     BearerTokenResolver bearerTokenResolver() {
-        DefaultBearerTokenResolver bearerTokenResolver = new DefaultBearerTokenResolver();
+        final DefaultBearerTokenResolver bearerTokenResolver = new DefaultBearerTokenResolver();
         bearerTokenResolver.setBearerTokenHeaderName(AUTH_TOKEN);
         return bearerTokenResolver;
     }

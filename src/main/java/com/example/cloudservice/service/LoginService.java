@@ -23,11 +23,12 @@ public class LoginService {
     }
 
     public ResponseEntity<Object> login(LoginRequest loginRequest) throws JOSEException {
-        String username = loginRequest.getLogin();
-        String password = loginRequest.getPassword();
-        Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        User userEntity = (User) authentication.getPrincipal();
-        String token = tokenProvider.createToken(userEntity);
+        final String username = loginRequest.getLogin();
+        final String password = loginRequest.getPassword();
+        final Authentication authentication =
+                manager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        final User userEntity = (User) authentication.getPrincipal();
+        final String token = tokenProvider.createToken(userEntity);
         return ResponseEntity.ok().body(new LoginResponse(token));
     }
 }

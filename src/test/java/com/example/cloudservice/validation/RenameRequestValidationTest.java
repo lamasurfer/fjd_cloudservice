@@ -20,16 +20,16 @@ public class RenameRequestValidationTest {
 
     @Test
     void test_validRenameRequest_noViolations() {
-        final RenameRequest loginRequest = new RenameRequest("test.file");
-        final Set<ConstraintViolation<RenameRequest>> violations = validator.validate(loginRequest);
+        final RenameRequest renameRequest = new RenameRequest("test.file");
+        final Set<ConstraintViolation<RenameRequest>> violations = validator.validate(renameRequest);
 
         assertTrue(violations.isEmpty());
     }
 
     @Test
     void test_emptyFilename_oneViolation() {
-        final RenameRequest loginRequest = new RenameRequest("");
-        final Set<ConstraintViolation<RenameRequest>> violations = validator.validate(loginRequest);
+        final RenameRequest renameRequest = new RenameRequest("");
+        final Set<ConstraintViolation<RenameRequest>> violations = validator.validate(renameRequest);
 
         assertEquals(1, violations.size());
     }

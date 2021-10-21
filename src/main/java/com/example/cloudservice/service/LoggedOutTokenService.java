@@ -33,7 +33,7 @@ public class LoggedOutTokenService {
     @Transactional
     @CacheEvict(CACHE_NAME)
     public void addToken(String token) {
-        LoggedOutToken loggedOutToken = createLoggedOutToken(token, Instant.now());
+        final LoggedOutToken loggedOutToken = createLoggedOutToken(token, Instant.now());
         tokenRepository.saveAndFlush(loggedOutToken);
     }
 
@@ -46,13 +46,13 @@ public class LoggedOutTokenService {
     @Scheduled(fixedRateString = "${app.security.jwt.cache-reset-rate-millis}")
     @CacheEvict(value = CACHE_NAME, allEntries = true)
     public void deleteOldTokens() {
-        Date now = Date.from(Instant.now());
+        final Date now = Date.from(Instant.now());
         tokenRepository.removeAllByStoreTillBefore(now);
         LOGGER.info(TOKENS_REMOVED_MESSAGE);
     }
 
     LoggedOutToken createLoggedOutToken(String token, Instant instant) {
-        Date storeTime = Date.from(instant.plusMillis(tokenStoreTime));
+        final Date storeTime = Date.from(instant.plusMillis(tokenStoreTime));
         return new LoggedOutToken(token, storeTime);
     }
 }

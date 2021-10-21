@@ -47,8 +47,8 @@ class LoginControllerTest {
     @Test
     void test_login_emptyJson_isBadRequest() throws Exception {
         this.mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(""))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"message\":\"Некорректный запрос\", \"id\":400}"));
     }
@@ -56,10 +56,10 @@ class LoginControllerTest {
     @Test
     void test_login_loginRequestWrongJson_isBadRequest() throws Exception {
         this.mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \": \"john\"\n" +
-                        "}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \": \"john\"\n" +
+                                "}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"message\":\"Некорректный запрос\", \"id\":400}"));
     }
@@ -67,11 +67,11 @@ class LoginControllerTest {
     @Test
     void test_login_loginRequestEmptyLogin_isBadRequest() throws Exception {
         this.mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"login\": \"\",\n" +
-                        "  \"password\": \"john\"\n" +
-                        "}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"login\": \"\",\n" +
+                                "  \"password\": \"john\"\n" +
+                                "}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"message\":\"Логин должен быть заполнен\", \"id\":400}"));
     }
@@ -79,11 +79,11 @@ class LoginControllerTest {
     @Test
     void test_login_loginRequestEmptyPassword_isBadRequest() throws Exception {
         this.mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"login\": \"john\",\n" +
-                        "  \"password\": \"\"\n" +
-                        "}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"login\": \"john\",\n" +
+                                "  \"password\": \"\"\n" +
+                                "}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"message\":\"Пароль должен быть заполнен\", \"id\":400}"));
     }
@@ -91,11 +91,11 @@ class LoginControllerTest {
     @Test
     void test_login_loginRequestBothEmpty_isBadRequest() throws Exception {
         this.mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"login\": \"\",\n" +
-                        "  \"password\": \"\"\n" +
-                        "}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"login\": \"\",\n" +
+                                "  \"password\": \"\"\n" +
+                                "}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"message\":\"Логин должен быть заполнен, " +
                         "Пароль должен быть заполнен\", \"id\":400}"));
@@ -110,11 +110,11 @@ class LoginControllerTest {
         when(loginService.login(any(LoginRequest.class))).thenReturn(responseEntity);
 
         this.mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"login\": \"john\",\n" +
-                        "  \"password\": \"john\"\n" +
-                        "}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"login\": \"john\",\n" +
+                                "  \"password\": \"john\"\n" +
+                                "}"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"auth-token\":\"" + authToken + "\"}"));
     }
@@ -124,11 +124,11 @@ class LoginControllerTest {
         when(loginService.login(any(LoginRequest.class))).thenThrow(BadCredentialsException.class);
 
         this.mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"login\": \"wrong\",\n" +
-                        "  \"password\": \"wrong\"\n" +
-                        "}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"login\": \"wrong\",\n" +
+                                "  \"password\": \"wrong\"\n" +
+                                "}"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().json("{\"message\":\"Пользователь с таким логином и паролем не найден\", \"id\":401}"));
     }
