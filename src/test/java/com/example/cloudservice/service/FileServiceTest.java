@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,7 +66,7 @@ class FileServiceTest {
     void test_uploadFile_expectedBehaviour() throws IOException {
         final FileEntity fileEntity = fileService.createFileEntity(filename, user, file);
         when(fileRepository.existsByFilenameAndUserUsername(filename, username)).thenReturn(false);
-        when(userRepository.getOne(username)).thenReturn(user);
+        when(userRepository.findById(username)).thenReturn(Optional.of(user));
 
         final ResponseEntity<Object> expected = ResponseEntity.ok().build();
         final ResponseEntity<Object> actual = fileService.uploadFile(filename, file, username);
@@ -73,7 +74,7 @@ class FileServiceTest {
         assertEquals(expected, actual);
         verify(fileRepository).existsByFilenameAndUserUsername(filename, username);
         verify(fileRepository).saveAndFlush(fileEntity);
-        verify(userRepository).getOne(username);
+        verify(userRepository).findById(username);
     }
 
     @Test
@@ -81,6 +82,14 @@ class FileServiceTest {
         when(fileRepository.existsByFilenameAndUserUsername(filename, username)).thenReturn(true);
 
         assertThrows(FileException.class, () -> fileService.uploadFile(filename, file, username));
+    }
+
+    @Test
+    void test_uploadFile_userNotFound_throwsException() {
+        when(fileRepository.existsByFilenameAndUserUsername(filename, username)).thenReturn(false);
+        when(userRepository.findById(username)).thenReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class, () -> fileService.uploadFile(filename, file, username));
     }
 
     @Test
