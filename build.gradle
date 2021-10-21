@@ -11,7 +11,7 @@ jar {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-def testContainersVersion = '1.15.2'
+def testContainersVersion = '1.16.1'
 
 repositories {
     mavenCentral()
