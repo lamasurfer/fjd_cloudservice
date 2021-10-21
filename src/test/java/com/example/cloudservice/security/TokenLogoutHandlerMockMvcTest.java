@@ -28,11 +28,11 @@ public class TokenLogoutHandlerMockMvcTest {
     @Test
     void test_logout_validTokenCannotBeReusedAfterLogout() throws Exception {
         final MvcResult result = this.mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"login\": \"user\",\n" +
-                        "  \"password\": \"user\"\n" +
-                        "}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"login\": \"user\",\n" +
+                                "  \"password\": \"user\"\n" +
+                                "}"))
                 .andExpect(status().isOk()).andReturn();
 
 
@@ -42,11 +42,11 @@ public class TokenLogoutHandlerMockMvcTest {
         final String token = response.getToken();
 
         this.mockMvc.perform(post("/logout")
-                .header(AUTH_TOKEN, BEARER + token))
+                        .header(AUTH_TOKEN, BEARER + token))
                 .andExpect(status().isOk());
 
         this.mockMvc.perform(get("/list")
-                .header(AUTH_TOKEN, BEARER + token))
+                        .header(AUTH_TOKEN, BEARER + token))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().json("{\"message\":\"Токен доступа недействителен, " +
                         "отозван или поврежден\", \"id\":401}"));

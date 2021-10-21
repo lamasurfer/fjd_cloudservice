@@ -88,7 +88,7 @@ class FileControllerTest {
     @Test
     void test_uploadFile_badRequest() throws Exception {
         this.mockMvc.perform(post("/file")
-                .header(AUTH_TOKEN, token))
+                        .header(AUTH_TOKEN, token))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().json("{\"message\":\"Некорректные параметры запроса\", \"id\":400}"));
     }
@@ -96,7 +96,7 @@ class FileControllerTest {
     @Test
     void test_deleteFile_badRequest() throws Exception {
         this.mockMvc.perform(delete("/file")
-                .header(AUTH_TOKEN, token))
+                        .header(AUTH_TOKEN, token))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().json("{\"message\":\"Не удалось удалить файл! Имя файла не указано\", \"id\":400}"));
     }
@@ -104,7 +104,7 @@ class FileControllerTest {
     @Test
     void test_downloadFile_badRequest() throws Exception {
         this.mockMvc.perform(get("/file")
-                .header(AUTH_TOKEN, token))
+                        .header(AUTH_TOKEN, token))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().json("{\"message\":\"Не удалось загрузить файл! Имя файла не указано\", \"id\":400}"));
     }
@@ -112,7 +112,7 @@ class FileControllerTest {
     @Test
     void test_renameFile_badRequest() throws Exception {
         this.mockMvc.perform(put("/file")
-                .header(AUTH_TOKEN, token))
+                        .header(AUTH_TOKEN, token))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().json("{\"message\":\"Некорректные параметры запроса\", \"id\":400}"));
     }
@@ -120,7 +120,7 @@ class FileControllerTest {
     @Test
     void test_login_wrongMethod_isBadRequest() throws Exception {
         this.mockMvc.perform(post("/list")
-                .header(AUTH_TOKEN, token))
+                        .header(AUTH_TOKEN, token))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().json("{\"message\":\"Http метод не поддерживается\", \"id\":405}"));
     }

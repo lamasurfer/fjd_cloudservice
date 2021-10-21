@@ -21,7 +21,7 @@ public class LoggedOutTokenValidator implements OAuth2TokenValidator<Jwt> {
 
     @Override
     public OAuth2TokenValidatorResult validate(Jwt jwtToken) {
-        String token = jwtToken.getTokenValue();
+        final String token = jwtToken.getTokenValue();
         if (loggedOutTokenService.checkToken(token)) {
             return OAuth2TokenValidatorResult.failure(error);
         }

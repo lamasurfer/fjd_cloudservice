@@ -22,9 +22,9 @@ public class TokenLogoutHandler extends SecurityContextLogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         super.logout(request, response, authentication);
-        String bearer = request.getHeader(SecurityConfig.AUTH_TOKEN);
+        final String bearer = request.getHeader(SecurityConfig.AUTH_TOKEN);
         if (bearer != null) {
-            String token = bearer.substring(TOKEN_START_INDEX);
+            final String token = bearer.substring(TOKEN_START_INDEX);
             loggedOutTokenService.addToken(token);
         }
     }

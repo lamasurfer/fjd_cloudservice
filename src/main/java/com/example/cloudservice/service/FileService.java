@@ -54,7 +54,7 @@ public class FileService {
 
     @Transactional
     public ResponseEntity<Object> listFiles(int limit, String username) {
-        List<FileProjection> files = fileRepository.findFileByUserUsername(username);
+        final List<FileProjection> files = fileRepository.findFileByUserUsername(username);
         return ResponseEntity.ok().body(files);
     }
 

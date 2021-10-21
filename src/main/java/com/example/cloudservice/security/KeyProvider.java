@@ -29,21 +29,20 @@ public class KeyProvider {
     private String privateKeyFileName;
 
     public KeyPair provideKeys() {
-        KeyPair keyPair;
         if (checkIfKeyFilesExist()) {
-            keyPair = loadKeyPair();
+            return loadKeyPair();
         } else {
-            keyPair = generateKeyPair();
+            final KeyPair keyPair = generateKeyPair();
             saveKeyPair(keyPair);
+            return keyPair;
         }
-        return keyPair;
     }
 
     KeyPair generateKeyPair() {
         try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance(algorithm);
+            final KeyPairGenerator kpg = KeyPairGenerator.getInstance(algorithm);
             kpg.initialize(keySize);
-            KeyPair keyPair = kpg.generateKeyPair();
+            final KeyPair keyPair = kpg.generateKeyPair();
             LOGGER.info("KeyPair generated successfully.");
             return keyPair;
         } catch (NoSuchAlgorithmException e) {
@@ -53,12 +52,12 @@ public class KeyProvider {
     }
 
     void saveKeyPair(KeyPair keyPair) {
-        PrivateKey privateKey = keyPair.getPrivate();
-        PublicKey publicKey = keyPair.getPublic();
+        final PrivateKey privateKey = keyPair.getPrivate();
+        final PublicKey publicKey = keyPair.getPublic();
 
-        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+        final X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
                 publicKey.getEncoded());
-        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
+        final PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
                 privateKey.getEncoded());
         try (FileOutputStream publicFos = new FileOutputStream(publicKeyFileName);
              FileOutputStream privateFos = new FileOutputStream(privateKeyFileName)) {
@@ -74,8 +73,8 @@ public class KeyProvider {
         final File publicKeyFile = new File(publicKeyFileName);
         final File privateKeyFile = new File(privateKeyFileName);
 
-        byte[] encodedPublicKey = new byte[(int) publicKeyFile.length()];
-        byte[] encodedPrivateKey = new byte[(int) privateKeyFile.length()];
+        final byte[] encodedPublicKey = new byte[(int) publicKeyFile.length()];
+        final byte[] encodedPrivateKey = new byte[(int) privateKeyFile.length()];
 
         try (FileInputStream publicFis = new FileInputStream(publicKeyFile);
              FileInputStream privateFis = new FileInputStream(privateKeyFile)) {
@@ -83,19 +82,19 @@ public class KeyProvider {
             publicFis.read(encodedPublicKey);
             privateFis.read(encodedPrivateKey);
 
-            KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
-            PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+            final KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+            final X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
+            final PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
-            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
-            PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
-            KeyPair keyPair = new KeyPair(publicKey, privateKey);
+            final PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
+            final PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+            final KeyPair keyPair = new KeyPair(publicKey, privateKey);
             LOGGER.info("KeyPair loaded successfully.");
             return keyPair;
 
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             LOGGER.error("Failed to load KeyPair : " + e.getClass().getSimpleName() + ", new KeyPair will be generated.");
-            KeyPair keyPair = generateKeyPair();
+            final KeyPair keyPair = generateKeyPair();
             saveKeyPair(keyPair);
             return keyPair;
         }
