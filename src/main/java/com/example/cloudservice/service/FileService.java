@@ -12,6 +12,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,8 +41,9 @@ public class FileService {
             throw new FileException(messages.getMessage("file.upload.file.exists"));
         }
         try {
-            User user = userRepository.getOne(username);
-            FileEntity fileEntity = createFileEntity(filename, user, file);
+            final User user = userRepository.findById(username).orElseThrow(
+                    () -> new UsernameNotFoundException(messages.getMessage("user.not.found")));
+            final FileEntity fileEntity = createFileEntity(filename, user, file);
             fileRepository.saveAndFlush(fileEntity);
 
         } catch (IOException e) {
