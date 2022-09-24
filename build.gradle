@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.0'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version '2.7.4'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
 }
 
@@ -10,7 +10,7 @@ jar {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
@@ -33,13 +33,13 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
-    testImplementation 'org.testcontainers:junit-jupiter:1.16.2'
-    testImplementation 'org.testcontainers:mysql:1.16.2'
+    testImplementation 'org.testcontainers:junit-jupiter:1.17.3'
+    testImplementation 'org.testcontainers:mysql:1.17.3'
     testImplementation 'com.h2database:h2'
     implementation 'org.liquibase:liquibase-core'
 }
 
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
 }
